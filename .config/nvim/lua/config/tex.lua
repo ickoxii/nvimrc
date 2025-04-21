@@ -15,10 +15,22 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 })
 
 -- compile file on save
+vim.g.latex_engine = "tectonic"
+
 vim.api.nvim_create_autocmd("BufWritePost", {
   pattern = { "*.tex", "*.bib" },
   group = pdftex,
   callback = function()
-    os.execute("tectonic " .. vim.fn.expand("%:p") .. " &> /dev/null &")
+    -- print(vim.g.latex_engine .. " " .. vim.fn.expand("%:p"))
+    local engine = vim.g.latex_engine or "tectonic"
+    os.execute(engine .. " " .. vim.fn.expand("%:p") .. " &> /dev/null &")
   end,
 })
+
+vim.api.nvim_create_user_command("ToggleTexEngine", function()
+  if vim.g.latex_engine == "tectonic" then
+    vim.g.latex_engine = "xelatex"
+  else
+    vim.g.latex_engine = "tectonic"
+  end
+end, {})
