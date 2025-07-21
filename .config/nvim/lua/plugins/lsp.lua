@@ -334,7 +334,7 @@ return {
           lsp_format_opt = "fallback"
         end
         return {
-          timeout_ms = 500,
+          timeout_ms = 5000,
           lsp_format = lsp_format_opt,
         }
       end,
@@ -345,7 +345,9 @@ return {
           prepend_args = { "-i", "2" },
         },
         latexindent = {
-          prepend_args = { "-m" },
+          -- modifyLineBreaks = true, -- Is this all I need?
+          -- command = "/Users/ickoxii/.local/share/nvim/mason/bin/latexindent",
+          -- args = { "-m", "-s", "-w" }, -- `-w` to overwrite current file?
         },
       },
     },

@@ -20,6 +20,7 @@ return {
       "java",
       "javascript",
       "jsdoc",
+      "latex",
       "lua",
       "luadoc",
       "markdown",
@@ -39,7 +40,7 @@ return {
     auto_install = true,
 
     indent = {
-      enable = true
+      enable = true,
     },
 
     highlight = {
@@ -52,7 +53,7 @@ return {
       -- Instead of true it can also be a list of languages
       additional_vim_regex_highlighting = { "markdown" },
     },
-  }
+  },
 }
 
 -- html with go??? huh
