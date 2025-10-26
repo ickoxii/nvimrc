@@ -20,27 +20,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 --
--- Vim DOCX (vdocx) augroup
---
-vim.filetype.add({
-  extension = {
-    vdocx = "vdocx",
-  },
-})
-
--- Create an autocommand group for vdocx settings
-vim.api.nvim_create_augroup("VDocxSettings", { clear = true })
-
--- Load specific settings for vdocx files
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "vdocx",
-  callback = function()
-    require("config.vdocx")
-  end,
-  group = "VDocxSettings",
-})
-
---
 -- remember fold groups
 --
 vim.api.nvim_create_augroup("remember_folds", { clear = true })
