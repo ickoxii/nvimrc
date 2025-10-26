@@ -3,6 +3,7 @@ require("config.set")
 require("config.lazy")
 require("config.tex")
 require("config.dot")
+require("config.lsp-loader")
 
 --
 -- spell check on markdown files
