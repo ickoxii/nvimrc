@@ -40,18 +40,23 @@ return {
       })
     end, { desc = "Telescope: Search [B]uffer [S]trings" })
 
+    -- vim.keymap.set("n", "<leader>ps", function()
+    --   -- builtin.live_grep({
+    --   --   grep_open_files = true,
+    --   --   file_ignore_patterns = { "\\./" },
+    --   --   prompt_title = "Grep String in Project",
+    --   -- })
+    --   builtin.live_grep({
+    --     vim.keymap.set("n", "<leader>ps", function()
+    --       builtin.grep_string({ search = vim.fn.input("Grep > ") })
+    --     end),
+    --   })
+    -- end, { desc = "Telescope: Search [P]roject [S]trings" })
     vim.keymap.set("n", "<leader>ps", function()
-      -- builtin.live_grep({
-      --   grep_open_files = true,
-      --   file_ignore_patterns = { "\\./" },
-      --   prompt_title = "Grep String in Project",
-      -- })
-      builtin.live_grep({
-        vim.keymap.set("n", "<leader>ps", function()
-          builtin.grep_string({ search = vim.fn.input("Grep > ") })
-        end),
-      })
+      builtin.grep_string({ search = vim.fn.input("Grep > ") })
     end, { desc = "Telescope: Search [P]roject [S]trings" })
+
+    vim.keymap.set("n", "<leader>pg", builtin.live_grep, { desc = "Telescope: Search [P]roject [G]rep (live)" })
 
     ---
     ----- File Searching
