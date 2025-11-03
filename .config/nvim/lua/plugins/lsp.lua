@@ -21,27 +21,27 @@ return {
   },
 
   -- Java support (only loads if java is in NVIM_LSP_LANGS)
-  {
-    "nvim-java/nvim-java",
-    opts = {},
-    cond = function()
-      local env_langs = os.getenv('NVIM_LSP_LANGS')
-      if not env_langs then
-        -- Not in container, load by default
-        if not (os.getenv('container') or os.getenv('DOCKER_CONTAINER')) then
-          return true
-        end
-        return false
-      end
-      -- Check if java is in the list
-      for lang in env_langs:gmatch('[^,]+') do
-        if lang:match("^%s*(.-)%s*$") == 'java' then
-          return true
-        end
-      end
-      return false
-    end,
-  },
+  -- {
+  --   "nvim-java/nvim-java",
+  --   opts = {},
+  --   cond = function()
+  --     local env_langs = os.getenv('NVIM_LSP_LANGS')
+  --     if not env_langs then
+  --       -- Not in container, load by default
+  --       if not (os.getenv('container') or os.getenv('DOCKER_CONTAINER')) then
+  --         return true
+  --       end
+  --       return false
+  --     end
+  --     -- Check if java is in the list
+  --     for lang in env_langs:gmatch('[^,]+') do
+  --       if lang:match("^%s*(.-)%s*$") == 'java' then
+  --         return true
+  --       end
+  --     end
+  --     return false
+  --   end,
+  -- },
 
   -- Main lsp config
   {
@@ -56,23 +56,26 @@ return {
 
     config = function()
       -- Load the LSP loader
-      local lsp_loader = require('config.lsp-loader')
+      local lsp_loader = require("config.lsp-loader")
 
       -- Load language-specific configs
       local lang_configs = {}
-      local lsp_dir = vim.fn.stdpath('config') .. '/lua/plugins/lsp'
+      local lsp_dir = vim.fn.stdpath("config") .. "/lua/plugins/lsp"
 
       -- Check if lsp directory exists
       if vim.fn.isdirectory(lsp_dir) == 1 then
         for _, file in ipairs(vim.fn.readdir(lsp_dir)) do
-          if file:match('%.lua$') then
-            local module_name = file:gsub('%.lua$', '')
-            local ok, config = pcall(require, 'plugins.lsp.' .. module_name)
+          if file:match("%.lua$") then
+            local module_name = file:gsub("%.lua$", "")
+            local ok, config = pcall(require, "plugins.lsp." .. module_name)
             if ok and config and config.name then
               lang_configs[config.name] = config
             else
               if not ok then
-                vim.notify('Failed to load LSP config: ' .. module_name .. '\nError: ' .. tostring(config), vim.log.levels.WARN)
+                vim.notify(
+                  "Failed to load LSP config: " .. module_name .. "\nError: " .. tostring(config),
+                  vim.log.levels.WARN
+                )
               end
             end
           end
@@ -127,8 +130,18 @@ return {
           map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
           vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0, desc = "LSP: View man page" })
-          vim.keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, { buffer = 0, desc = "LSP: Goto [D]iagnostic [N]ext" })
-          vim.keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, { buffer = 0, desc = "LSP: Goto [D]iagnostic [P]rev" })
+          vim.keymap.set(
+            "n",
+            "<leader>dn",
+            vim.diagnostic.goto_next,
+            { buffer = 0, desc = "LSP: Goto [D]iagnostic [N]ext" }
+          )
+          vim.keymap.set(
+            "n",
+            "<leader>dp",
+            vim.diagnostic.goto_prev,
+            { buffer = 0, desc = "LSP: Goto [D]iagnostic [P]rev" }
+          )
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = 0, desc = "LSP: [R]e[n]ame" })
 
           local function client_supports_method(client, method, bufnr)
@@ -140,7 +153,10 @@ return {
           end
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+          if
+            client
+            and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
+          then
             local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
@@ -182,11 +198,8 @@ return {
 
       -- Define Capabilities
       local cmp_lsp = require("cmp_nvim_lsp")
-      local capabilities = vim.tbl_deep_extend(
-        "force",
-        vim.lsp.protocol.make_client_capabilities(),
-        cmp_lsp.default_capabilities()
-      )
+      local capabilities =
+        vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), cmp_lsp.default_capabilities())
 
       -- Setup mason-tool-installer
       require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
