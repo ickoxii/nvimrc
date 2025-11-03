@@ -9,8 +9,9 @@ return {
   servers = {},
 
   setup = function(capabilities)
-    require("lspconfig").clangd.setup({
-      capabilities = capabilities,
+    vim.lsp.config('clangd', {
+      capabilities = capabilities
     })
+    vim.lsp.enable({'clangd'})
   end,
 }

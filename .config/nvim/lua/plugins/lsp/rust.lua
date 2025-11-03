@@ -14,7 +14,7 @@ return {
   -- Setup function for locally installed tools
   setup = function(capabilities)
     -- rust_analyzer, clippy, and rustfmt can be installed with rustup
-    require("lspconfig").rust_analyzer.setup({
+    vim.lsp.config("rust_analyzer", {
       capabilities = capabilities,
       settings = {
         ["rust-analyzer"] = {

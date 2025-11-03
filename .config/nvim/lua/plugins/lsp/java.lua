@@ -4,7 +4,9 @@ return {
   name = 'java',
 
   -- No dependencies here - nvim-java is conditionally loaded in main lsp.lua
-  dependencies = {},
+  dependencies = {
+    "nvim-java/nvim-java",
+  },
 
   mason_tools = {},
 
@@ -12,8 +14,9 @@ return {
 
   setup = function(capabilities)
     -- Requires nvim-java plugin to be loaded
-    require("lspconfig").jdtls.setup({
-      capabilities = capabilities,
+    vim.lsp.config('jdtls', {
+      capabilities = capabilities
     })
+    vim.lsp.enable({'jdtls'})
   end,
 }

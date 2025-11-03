@@ -11,8 +11,9 @@ return {
   },
 
   setup = function(capabilities)
-    require("lspconfig").pyright.setup({
-      capabilities = capabilities,
+    vim.lsp.config('pyright', {
+      capabilities = capabilities
     })
+    vim.lsp.enable({'pyright'})
   end,
 }
