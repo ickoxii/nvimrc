@@ -40,3 +40,6 @@ nondeterministic
 undirected
 subnets
 subnet
+bijective
+injective
+surjective

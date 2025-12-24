@@ -21,27 +21,27 @@ return {
   },
 
   -- Java support (only loads if java is in NVIM_LSP_LANGS)
-  -- {
-  --   "nvim-java/nvim-java",
-  --   opts = {},
-  --   cond = function()
-  --     local env_langs = os.getenv('NVIM_LSP_LANGS')
-  --     if not env_langs then
-  --       -- Not in container, load by default
-  --       if not (os.getenv('container') or os.getenv('DOCKER_CONTAINER')) then
-  --         return true
-  --       end
-  --       return false
-  --     end
-  --     -- Check if java is in the list
-  --     for lang in env_langs:gmatch('[^,]+') do
-  --       if lang:match("^%s*(.-)%s*$") == 'java' then
-  --         return true
-  --       end
-  --     end
-  --     return false
-  --   end,
-  -- },
+  {
+    "nvim-java/nvim-java",
+    opts = {},
+    cond = function()
+      local env_langs = os.getenv("NVIM_LSP_LANGS")
+      if not env_langs then
+        -- Not in container, load by default
+        if not (os.getenv("container") or os.getenv("DOCKER_CONTAINER")) then
+          return true
+        end
+        return false
+      end
+      -- Check if java is in the list
+      for lang in env_langs:gmatch("[^,]+") do
+        if lang:match("^%s*(.-)%s*$") == "java" then
+          return true
+        end
+      end
+      return false
+    end,
+  },
 
   -- Main lsp config
   {

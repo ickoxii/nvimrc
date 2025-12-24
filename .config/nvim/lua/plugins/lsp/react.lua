@@ -7,7 +7,7 @@ return {
   mason_tools = {},
 
   servers = {
-    emmet_language_server = {},
+    vtsls = {},
   },
 
   setup = function(capabilities)
