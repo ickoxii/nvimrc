@@ -246,7 +246,7 @@ return {
         lua = { "stylua" },
         tex = { "latexindent" },
         rust = { "rustfmt" },
-        ["*"] = { "trim_whitespace", "trim_newlines" },
+        -- ["*"] = { "trim_whitespace", "trim_newlines" },
       },
       default_format_opts = {
         lsp_format = "fallback",
