@@ -130,32 +130,18 @@ return {
           map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
           vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0, desc = "LSP: View man page" })
-          vim.keymap.set(
-            "n",
-            "<leader>dn",
-            vim.diagnostic.goto_next,
-            { buffer = 0, desc = "LSP: Goto [D]iagnostic [N]ext" }
-          )
-          vim.keymap.set(
-            "n",
-            "<leader>dp",
-            vim.diagnostic.goto_prev,
-            { buffer = 0, desc = "LSP: Goto [D]iagnostic [P]rev" }
-          )
+          vim.keymap.set("n", "<leader>dn", function()
+            vim.diagnostic.jump({ count = 1 })
+          end, { buffer = 0, desc = "LSP: Goto [D]iagnostic [N]ext" })
+          vim.keymap.set("n", "<leader>dp", function()
+            vim.diagnostic.jump({ count = -1 })
+          end, { buffer = 0, desc = "LSP: Goto [D]iagnostic [P]rev" })
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = 0, desc = "LSP: [R]e[n]ame" })
-
-          local function client_supports_method(client, method, bufnr)
-            if vim.fn.has("nvim-0.11") == 1 then
-              return client:supports_method(method, bufnr)
-            else
-              return client.supports_method(method, { bufnr = bufnr })
-            end
-          end
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if
             client
-            and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
+            and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
           then
             local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
@@ -177,7 +163,7 @@ return {
             })
           end
 
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
             map("<leader>th", function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
             end, "[T]oggle Inlay [H]ints")

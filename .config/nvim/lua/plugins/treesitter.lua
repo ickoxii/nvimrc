@@ -8,9 +8,12 @@
 
 return {
   "nvim-treesitter/nvim-treesitter",
+  branch = "main",
+  lazy = false,
   build = ":TSUpdate",
-  main = "nvim-treesitter.configs",
-  opts = (function()
+  config = function()
+    require("nvim-treesitter").setup({})
+
     -- helpers --
     local function split_csv(s)
       if not s or s == "" then
@@ -38,7 +41,7 @@ return {
       return (os.getenv("container") or os.getenv("DOCKER_CONTAINER")) and true or false
     end
 
-    -- Map “language intents” -> actual parser names
+    -- Map "language intents" -> actual parser names
     local expand = {
       -- basics
       lua = { "lua", "luadoc" },
@@ -86,7 +89,7 @@ return {
       end
     end
 
-    -- If nothing was requested and we’re NOT in a container, provide a sane small default
+    -- If nothing was requested and we're NOT in a container, provide a sane small default
     if #requested == 0 and not in_container() then
       for _, p in ipairs({
         "bash",
@@ -113,22 +116,27 @@ return {
       end
     end
 
-    -- Auto-install can try to compile grammars; turn it off in containers
-    local auto_install = not in_container()
+    -- Install parsers (async, no-op if already installed)
+    require("nvim-treesitter").install(ensure)
 
-    return {
-      ensure_installed = ensure,
-      sync_install = false,
-      auto_install = auto_install,
+    -- Enable treesitter highlighting for all filetypes with available parsers
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("treesitter-start", { clear = true }),
+      callback = function(ev)
+        if ev.match == "markdown" then
+          pcall(vim.treesitter.start, 0, nil, { additional_vim_regex_highlighting = true })
+        else
+          pcall(vim.treesitter.start)
+        end
+      end,
+    })
 
-      indent = {
-        enable = true,
-      },
-
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = { "markdown" },
-      },
-    }
-  end)(),
+    -- Enable treesitter-based indentation
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("treesitter-indent", { clear = true }),
+      callback = function()
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
+    })
+  end,
 }
