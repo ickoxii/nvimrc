@@ -14,6 +14,19 @@ return {
 
   setup = function(capabilities)
     -- Requires nvim-java plugin to be loaded
+    require('java').setup({
+      jdtls = {
+        settings = {
+          java = {
+            configuration = {
+              maven = {
+                userSettings = vim.fn.expand('~/.m2/settings.xml')
+              }
+            }
+          }
+        }
+      }
+    })
     vim.lsp.config('jdtls', {
       capabilities = capabilities
     })
